@@ -1,0 +1,198 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Check, ClipboardPaste, ScanSearch, Gauge } from "lucide-react";
+
+import { ReportView } from "@/components/report/ReportView";
+import { SiteFooter } from "@/components/site/SiteFooter";
+import { SiteHeader } from "@/components/site/SiteHeader";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import type { SalesReport } from "@/lib/report";
+
+const TITLE = "Mesuraa — ton rapport de vente en un coup d'œil";
+const DESCRIPTION =
+  "Mesuraa analyse le profil des visiteurs de tes publications et te montre lesquelles attirent de vrais acheteurs. 29 € par mois.";
+
+export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: TITLE },
+      { name: "description", content: DESCRIPTION },
+      { property: "og:title", content: TITLE },
+      { property: "og:description", content: DESCRIPTION },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: Index,
+});
+
+const steps = [
+  {
+    icon: ClipboardPaste,
+    title: "Tu donnes tes chiffres",
+    text: "Colle les statistiques de tes publications ou importe ton fichier d'export.",
+  },
+  {
+    icon: ScanSearch,
+    title: "Mesuraa analyse tes visiteurs",
+    text: "On étudie le profil de chaque visiteur et on repère ceux qui ressemblent à des acheteurs.",
+  },
+  {
+    icon: Gauge,
+    title: "Tu lis ton rapport en 3 secondes",
+    text: "Un seul écran : tes meilleures publications, tes acheteurs potentiels, quoi refaire.",
+  },
+];
+
+const included = [
+  "30 rapports de vente par mois",
+  "Analyse du profil de tes visiteurs",
+  "Score « acheteur potentiel » pour chaque publication",
+  "Ton rapport sur un seul écran, lisible en 3 secondes",
+  "Sans engagement, tu arrêtes quand tu veux",
+];
+
+const faqs = [
+  {
+    q: "Mesuraa, c'est pour qui ?",
+    a: "Pour les indépendants, commerçants et petites entreprises qui publient sur les réseaux sociaux et veulent savoir si ça leur ramène des clients.",
+  },
+  {
+    q: "Quelles données dois-je donner ?",
+    a: "Les statistiques de tes publications : tu les colles dans un formulaire ou tu importes le fichier d'export de ton réseau social. Pas besoin de donner ton mot de passe.",
+  },
+  {
+    q: "Y a-t-il un essai gratuit ?",
+    a: "Non. Mesuraa coûte 29 € par mois, sans engagement. Tu peux arrêter ton abonnement à tout moment.",
+  },
+  {
+    q: "Mes données sont-elles protégées ?",
+    a: "Oui. Tes données servent uniquement à créer ton rapport. Elles ne sont ni revendues ni partagées.",
+  },
+];
+
+const sampleReport: SalesReport = {
+  periode: "Rapport de la semaine",
+  visiteurs: 1240,
+  acheteursPotentiels: 38,
+  publications: [
+    { titre: "Reel « Avant / après »", reseau: "Instagram", scoreAcheteur: 82, raison: "" },
+    { titre: "Post « Nos tarifs »", reseau: "LinkedIn", scoreAcheteur: 64, raison: "" },
+    { titre: "Story « Coulisses »", reseau: "Instagram", scoreAcheteur: 21, raison: "" },
+  ],
+  profilAcheteur: "",
+  aRefaire: "plus de « Avant / après » sur Instagram.",
+  aArreter: "",
+};
+
+function Index() {
+  return (
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader />
+
+      <main className="flex-1">
+        {/* Accroche */}
+        <section className="mx-auto grid w-full max-w-5xl gap-10 px-4 pb-16 pt-10 sm:px-6 md:grid-cols-2 md:items-center md:pt-20">
+          <div>
+            <h1 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+              Ton rapport de vente en un coup d'œil.
+            </h1>
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+              Pour les pros qui publient sur les réseaux sociaux. Mesuraa analyse le profil de tes
+              visiteurs et te montre quelles publications attirent de vrais acheteurs.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Button asChild size="xl">
+                <Link to="/auth" search={{ mode: "inscription" }}>
+                  Commencer — 29 € / mois
+                </Link>
+              </Button>
+              <p className="text-sm text-muted-foreground">Sans engagement.</p>
+            </div>
+          </div>
+          <div className="flex justify-center md:justify-end">
+            <div className="w-full max-w-md">
+              <ReportView report={sampleReport} badge="Exemple" compact />
+            </div>
+          </div>
+        </section>
+
+        {/* Comment ça marche */}
+        <section id="comment" className="border-t bg-card">
+          <div className="mx-auto w-full max-w-5xl px-4 py-16 sm:px-6">
+            <h2 className="text-3xl font-extrabold tracking-tight">Comment ça marche</h2>
+            <ol className="mt-10 grid gap-8 md:grid-cols-3">
+              {steps.map((step, i) => (
+                <li key={step.title}>
+                  <div className="flex size-11 items-center justify-center rounded-lg bg-accent text-accent-foreground">
+                    <step.icon className="size-5" />
+                  </div>
+                  <p className="mt-4 text-sm font-semibold text-primary">Étape {i + 1}</p>
+                  <h3 className="mt-1 text-lg font-bold">{step.title}</h3>
+                  <p className="mt-2 leading-relaxed text-muted-foreground">{step.text}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* Prix */}
+        <section id="prix" className="border-t">
+          <div className="mx-auto w-full max-w-5xl px-4 py-16 sm:px-6">
+            <h2 className="text-3xl font-extrabold tracking-tight">Un seul prix, tout compris</h2>
+            <Card className="mt-10 w-full max-w-md shadow-card">
+              <CardContent className="p-6 sm:p-8">
+                <p className="font-semibold">Mesuraa</p>
+                <p className="mt-3">
+                  <span className="text-5xl font-extrabold tracking-tight">29 €</span>
+                  <span className="text-muted-foreground"> / mois</span>
+                </p>
+                <ul className="mt-6 space-y-3">
+                  {included.map((item) => (
+                    <li key={item} className="flex gap-3">
+                      <Check className="mt-0.5 size-5 shrink-0 text-primary" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button asChild size="xl" className="mt-8 w-full">
+                  <Link to="/auth" search={{ mode: "inscription" }}>
+                    Commencer
+                  </Link>
+                </Button>
+                <p className="mt-3 text-center text-xs text-muted-foreground">
+                  Paiement sécurisé. Pas d'essai gratuit, pas d'engagement.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Questions fréquentes */}
+        <section id="faq" className="border-t bg-card">
+          <div className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6">
+            <h2 className="text-3xl font-extrabold tracking-tight">Questions fréquentes</h2>
+            <Accordion type="single" collapsible className="mt-8">
+              {faqs.map((f) => (
+                <AccordionItem key={f.q} value={f.q}>
+                  <AccordionTrigger className="text-base font-semibold">{f.q}</AccordionTrigger>
+                  <AccordionContent className="text-base leading-relaxed text-muted-foreground">
+                    {f.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </section>
+      </main>
+
+      <SiteFooter />
+    </div>
+  );
+}
